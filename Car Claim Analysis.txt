@@ -1,0 +1,34 @@
+The SQL code analyzes car insurance claim data by calculating the total number of claims, 
+the average claim amount, identifying the top reasons for claims, 
+and listing the top 10 customers with the highest claim frequency.
+
+-- Calculate the total number of claims
+SELECT
+    COUNT(ClaimID) AS TotalClaims
+FROM Claims;
+
+-- Calculate the average claim amount
+SELECT
+    AVG(ClaimAmount) AS AverageClaimAmount
+FROM Claims;
+
+-- Identify the most common reasons for claims
+SELECT
+    Reason,
+    COUNT(ClaimID) AS NumberOfClaims
+FROM Claims
+GROUP BY Reason
+ORDER BY NumberOfClaims DESC
+LIMIT 5; -- Show the top 5 reasons for claims
+
+-- List customers with the highest number of claims
+SELECT
+    C.CustomerID,
+    C.CustomerName,
+    COUNT(ClaimID) AS NumberOfClaims
+FROM Customers C
+JOIN Policies P ON C.CustomerID = P.CustomerID
+JOIN Claims Cl ON P.PolicyID = Cl.PolicyID
+GROUP BY C.CustomerID, C.CustomerName
+ORDER BY NumberOfClaims DESC
+LIMIT 10; -- Show the top 10 customers with the highest number of claims

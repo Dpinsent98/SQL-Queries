@@ -1,0 +1,40 @@
+This query is provides a list of employees with their basic information, 
+department details, calculated age, and a count of employees in each group. 
+The results are ordered by age and then by salary in descending order.
+
+
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(50)
+);
+
+INSERT INTO Departments (DepartmentID, DepartmentName)
+VALUES
+    (1, 'HR'),
+    (2, 'IT'),
+    (3, 'Finance'),
+    (4, 'Marketing');
+
+-- SELECT statement with JOIN, EXTRACT, ORDER BY, and GROUP BY
+SELECT
+    E.EmployeeID,
+    E.FirstName,
+    E.LastName,
+    E.Department,
+    E.Salary,
+    D.DepartmentName,
+    EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM E.DateOfBirth) AS Age,
+    COUNT(E.EmployeeID) AS EmployeeCount
+FROM Employees AS E
+JOIN Departments AS D 
+ON E.Department = D.DepartmentName
+WHERE E.Salary = 50000
+GROUP BY
+    E.EmployeeID,
+    E.FirstName,
+    E.LastName,
+    E.Department,
+    E.Salary,
+    D.DepartmentName,
+    Age
+ORDER BY Age DESC, Salary DESC;
